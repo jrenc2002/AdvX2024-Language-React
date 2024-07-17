@@ -15,6 +15,7 @@ import {
 
 import '@/i18n'; // 引入 i18n 配置文件
 import LoginView from './view/LoginView'
+import PostView from './view/PostView.jsx'
 import RegisterView from './view/RegisterView'
 
 const App = (): React.ReactElement => {
@@ -34,6 +35,7 @@ const App = (): React.ReactElement => {
                     <Route path="/content/:title" element={<ContentView />} />
                     <Route path="/login" element={<LoginView />} />
                     <Route path="/register" element={<RegisterView />} />
+                    <Route path="/post/:id" element={<PostView />} />
                   </Routes>
                 </div>
               </div>
