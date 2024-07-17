@@ -12,6 +12,7 @@ import {
   BrowserRouter as Router,
   Routes
 } from 'react-router-dom'
+import 'tdesign-react/es/style/index.css'
 
 import '@/i18n'; // 引入 i18n 配置文件
 import LoginView from './view/LoginView'

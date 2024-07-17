@@ -26,7 +26,7 @@ export default function PostView(){
 			}).catch(console.log);
 	});
 	return <>
-		{JSON.stringify(post)}
+		{/* {JSON.stringify(post)} */}
 		----------------------------------
 		<br />
 		标题：{post.title}
@@ -55,5 +55,6 @@ export default function PostView(){
 		点踩数：{post.dislike}
 		<br />
 		收藏数：{post.star}
+		<img src={backend + 'user/avatar/' + post.author} />
 	</>;
 }
