@@ -1,20 +1,20 @@
 // src/App.tsx
-import React from 'react'
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate
-} from 'react-router-dom'
+import { DockDemo } from '@/components/DockDemo'
+import { GridBg } from '@/components/magicui/GirdBg'
+import ContentView from '@/view/ContentView'
 import HomeView from '@/view/HomeView'
 import SetView from '@/view/SetView'
 import StudyView from '@/view/StudyView'
-import ContentView from '@/view/ContentView'
-import { DockDemo } from '@/components/DockDemo'
-import { GridBg } from '@/components/magicui/GirdBg'
-import { useTranslation } from 'react-i18next'
+import React from 'react'
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes
+} from 'react-router-dom'
 
-import '@/i18n' // 引入 i18n 配置文件
+import '@/i18n'; // 引入 i18n 配置文件
+import LoginView from './view/LoginView'
 
 const App = (): React.ReactElement => {
   return (
@@ -31,6 +31,7 @@ const App = (): React.ReactElement => {
                     <Route path="/study" element={<StudyView />} />
                     <Route path="/set" element={<SetView />} />
                     <Route path="/content/:title" element={<ContentView />} />
+                    <Route path="/login" element={<LoginView />} />
                   </Routes>
                 </div>
               </div>
