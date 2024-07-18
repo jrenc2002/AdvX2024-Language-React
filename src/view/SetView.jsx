@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { useAtom } from 'jotai'
-import '@/i18n'
 import '@/assets/css/button.css'
+import { backend, language } from '@/global.js'
+import '@/i18n'
 import { BgKindAtom, languageAtom, themeAtom } from '@/store/AppSet'
+import axios from 'axios'
+import { useAtom } from 'jotai'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { backend, language, OPTIONS } from '@/global.js'
 import { MessagePlugin } from 'tdesign-react'
 const SetView = () => {
   const [loaded, setLoaded] = useState(false)
@@ -65,7 +65,7 @@ const SetView = () => {
       )
       .then((res) => {
         MessagePlugin.success(
-          `切换${type === 'firstLanguage' ? '母语' : '学习语言'}为${lang}成功`
+          `切换${type === 'firstLanguage' ? '母语' : '学习语言'}为${language[lang]}成功`
         )
         setLoaded(false)
       })
