@@ -17,8 +17,18 @@ export default function PostTranslateView() {
   const token = localStorage.getItem('token')
   const [commentsLoaded, setCommentsLoaded] = useState(false);
 	const [translation, setTranslation] = useState('');
+	const [likeStatus, setLikeStatus] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {
+		if(!likeStatus)
+			axios.get(backend + 'post/' + id + '/like', {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
+				.then(res => {
+					setLikeStatus(res.data.type);
+				})
+				.catch(err => {
+					MessagePlugin.error('获取点赞信息失败')
+					setLikeStatus(true);
+				})
     if (!loaded)
       axios
         .get(backend + 'post/' + id, {
@@ -84,6 +94,8 @@ export default function PostTranslateView() {
       点踩数：{post.dislike}
       <br />
       收藏数：{post.star}
+			<br />
+			用户点赞信息：{likeStatus == 'UNLIKE'?'无操作':(likeStatus == 'LIKE'?'已点赞':(likeStatus == 'DISLIKE'?'已点踩':'无法获取点赞信息'))}
 
       <h1 style={{fontSize: 99}}>评论</h1>
       {comments.map(comment => <>
