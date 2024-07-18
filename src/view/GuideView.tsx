@@ -1,40 +1,23 @@
-import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
 import GlobeDemo from '@/components/GlobeDemo'
 import BlurShow from '@/components/magicui/BlurShow'
-import LoginView from '@/view/LoginView'
 import HomeView from '@/view/HomeView'
+import LoginView from '@/view/LoginView'
 import RegisterView from '@/view/RegisterView'
-import axios from 'axios'
-import { backend } from '../global'
-
-// 判断是否登录的函数
-const checkLogin = async () => {
-  try {
-    const response = await axios.get(`${backend}/auth/check`)
-    return response.data.loggedIn
-  } catch (error) {
-    console.error('Error checking login status:', error)
-    return false
-  }
-}
+import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 function RightComponent() {
+  const token = localStorage.getItem('token');
   const location = useLocation()
   const navigate = useNavigate()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   useEffect(() => {
     const fetchLoginStatus = async () => {
-      const loggedIn = await checkLogin()
-      setIsLoggedIn(loggedIn)
-      if (
-        !loggedIn &&
-        location.pathname !== '/login' &&
-        location.pathname !== '/register'
-      ) {
-        navigate('/login')
-      }
+      if(token)
+        navigate('/home');
+      else
+        navigate('/login');
     }
     fetchLoginStatus()
   }, [location.pathname, navigate])

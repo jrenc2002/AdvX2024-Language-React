@@ -14,9 +14,10 @@ import {
 } from 'react-router-dom'
 import 'tdesign-react/es/style/index.css'
 
-import '@/i18n' // 引入 i18n 配置文件
-import PostView from './view/PostView.jsx'
+import '@/i18n'; // 引入 i18n 配置文件
 import GuideView from './view/GuideView'
+import PostView from './view/PostView.jsx'
+import SendPostView from './view/SendPostView.jsx'
 
 const App = (): React.ReactElement => {
   return (
@@ -51,6 +52,7 @@ const MainContent = () => {
               <Route path="/register" element={<GuideView />} />
               <Route path="/post/:id" element={<PostView />} />
               <Route path="/land" element={<GuideView />} />
+              <Route path="/post/new" element={<SendPostView />} />
             </Routes>
           </div>
         </div>

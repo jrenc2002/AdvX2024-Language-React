@@ -1,4 +1,4 @@
-export const backend = 'http://169.254.64.117:8080/';
+export const backend = 'https://forum.zeabur.app/';
 
 export const language = {
 	en: '英语',
