@@ -7,6 +7,7 @@ import BlurIn from '@/components/magicui/Blur'
 import { InputDemo } from '@/components/InputDemo'
 import { ArrowLeftIcon } from '@heroicons/react/20/solid'
 import { PlaceholdersAndVanishInput } from '@/components/magicui/placeholders-and-vanish-input'
+import DifyStreamingComponent from '@/api/Dify'
 const ContentView: React.FC = () => {
   const { title } = useParams<{ title: string }>()
   const [contentData] = useAtom(showContentAtom)
@@ -33,14 +34,14 @@ const ContentView: React.FC = () => {
 
   return (
     <BlurIn mode={false}>
-      <div className="flex h-screen w-full  items-start justify-center  bg-white bg-dot-black/[0.4] dark:bg-black dark:bg-dot-white/[0.2]">
+      <div className="dark:bg-black dark:bg-dot-white/[0.2] flex  h-screen w-full  items-start justify-center bg-white bg-dot-black/[0.4]">
         <div className="z-10 flex w-1/2 flex-col gap-4  p-2 ">
-          <div className="mt-10 h-[15vh] w-full  rounded-lg border border-gray-300 bg-white p-6  shadow-md dark:bg-gray-800">
+          <div className="dark:bg-gray-800 mt-10 h-[15vh]  w-full rounded-lg border border-gray-300 bg-white  p-6 shadow-md">
             <h3 className=" pl-2 text-xl font-bold leading-8 ">
               {contentData.question}
             </h3>
           </div>
-          <div className=" h-[60vh] w-full rounded-lg border border-gray-300 bg-white p-6 shadow-md dark:bg-gray-800">
+          <div className=" dark:bg-gray-800 h-[60vh] w-full rounded-lg border border-gray-300 bg-white p-6 shadow-md">
             <h3 className="mb-2 pl-2 text-xl font-light">
               {' '}
               {contentData.reply}
@@ -48,12 +49,13 @@ const ContentView: React.FC = () => {
           </div>
         </div>
         <div className="flex  w-1/2 flex-col gap-4   p-2">
-          <div className="relative mt-10  h-[calc(65vh-1.6rem)] w-full  rounded-lg border border-gray-300 bg-white p-6  shadow-md dark:bg-gray-800">
+          <div className="dark:bg-gray-800 relative  mt-10 h-[calc(65vh-1.6rem)]  w-full rounded-lg border border-gray-300 bg-white  p-6 shadow-md">
             <div className="h-full w-full overflow-auto overflow-x-hidden ">
               <div className="h-full w-full whitespace-pre-wrap break-words bg-white pl-2 text-xl font-light leading-8">
                 {
                   'sdsadasdsadasdsadasdsadasdsadasdsadasdsadasdsadasdsadasdsadasdsadasdsadasdsadasdsadasdsadasdsadasdsadasdsadasdsadasdsadasdsada'
                 }
+                <DifyStreamingComponent></DifyStreamingComponent>
               </div>
               <div className="absolute bottom-4 right-6   font-light text-gray-500">
                 ✨现在是AI指导的内容
