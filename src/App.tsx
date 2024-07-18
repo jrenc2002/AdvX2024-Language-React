@@ -14,9 +14,10 @@ import {
 } from 'react-router-dom'
 import 'tdesign-react/es/style/index.css'
 
-import '@/i18n' // 引入 i18n 配置文件
+import '@/i18n'; // 引入 i18n 配置文件
 import GuideView from './view/GuideView'
 import LangListView from './view/LangListView'
+import PostAITranslateView from './view/PostAITranslateView'
 import PostTranslateView from './view/PostTranslateView'
 import PostView from './view/PostView.jsx'
 import SendPostView from './view/SendPostView.jsx'
@@ -60,6 +61,7 @@ const MainContent = () => {
                 path="/post/translate/:id"
                 element={<PostTranslateView />}
               />
+              <Route path="/post/translateai/:id" element={<PostAITranslateView />} />
             </Routes>
           </div>
         </div>

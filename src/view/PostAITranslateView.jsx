@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Form, Input, MessagePlugin } from 'tdesign-react'
 import FormItem from 'tdesign-react/es/form/FormItem'
 
-export default function PostView() {
+export default function PostAITranslateView() {
   let { id } = useParams()
   const [post, setPost] = useState({
     title: null,
@@ -16,48 +16,9 @@ export default function PostView() {
   const [loaded, setLoaded] = useState(false)
   const token = localStorage.getItem('token')
   const [commentsLoaded, setCommentsLoaded] = useState(false);
+	const [translation, setTranslation] = useState('');
 	const [likeStatus, setLikeStatus] = useState(null);
   const navigate = useNavigate();
-  const LikeButton = likestatus => {
-    switch(likestatus) {
-      case 'UNLIKE': return <><Button onClick={() => {
-        axios.post(backend + 'post/' + id + '/like', {
-          type: 'LIKE'
-        }, {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
-          .then(res => {
-            MessagePlugin.success('点赞成功');
-            location.reload();
-          })
-      }}>点赞</Button><Button onClick={() => {
-        axios.post(backend + 'post/' + id + '/like', {
-          type: 'DISLIKE'
-        }, {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
-          .then(res => {
-            MessagePlugin.success('点踩成功');
-            location.reload();
-          })
-      }}>点踩</Button></>;
-      case 'DISLIKE': return <Button onClick={() => {
-        axios.post(backend + 'post/' + id + '/like', {
-          type: 'UNLIKE'
-        }, {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
-          .then(res => {
-            MessagePlugin.success('取消点踩成功');
-            location.reload();
-          })
-      }}>取消点踩</Button>
-      case 'LIKE': return <Button onClick={() => {
-        axios.post(backend + 'post/' + id + '/like', {
-          type: 'UNLIKE'
-        }, {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
-          .then(res => {
-            MessagePlugin.success('取消点赞成功');
-            location.reload();
-          })
-      }}>取消点赞</Button>
-      default: <></>;break;
-    };
-  }
   useEffect(() => {
 		if(!likeStatus)
 			axios.get(backend + 'post/' + id + '/like', {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
@@ -76,7 +37,23 @@ export default function PostView() {
           }
         })
         .then((res) => {
-          setLoaded(true)
+					setLoaded(true);
+					let message = MessagePlugin.loading('正在获取 AI 翻译', 0);
+					axios.post(backend + 'ai/translate/toFirstLang', {
+						source: res.data.language,
+						text: res.data.content.map(e => e.first).join('')
+					},{
+						headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}
+					})
+						.then(res => {
+							MessagePlugin.close(message);
+							MessagePlugin.success('AI 翻译获取成功');
+							setTranslation(res.data.translation);
+						})
+						.catch(err => {
+							MessagePlugin.error('翻译全文失败');
+							navigate('/');
+						});
           setPost(res.data)
           axios.get(backend + 'user/info/' + res.data.author).then((res) => {
             setAuthor(res.data)
@@ -102,29 +79,8 @@ export default function PostView() {
     <>
       标题：{post.title}
       <br />
-      内容：
-      {post.content.map((a) =>
-        a.second ? (
-          <span
-            onClick={() => {
-              axios.post(backend + 'lang/translate', {
-								lang: post.language,
-								word: a.first
-							}, {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
-                .then(res => {
-                  MessagePlugin.info('词汇“' + a.first + '”的翻译结果：' + res.data);
-                })
-                .catch(err => {
-                  MessagePlugin.error('翻译失败');
-                });
-            }}
-          >
-            {a.first}
-          </span>
-        ) : (
-          a.first
-        )
-      )}
+      翻译结果：
+      {translation}
       <br />
       作者：{author.username}
       <br />
@@ -141,16 +97,8 @@ export default function PostView() {
       点踩数：{post.dislike}
       <br />
       收藏数：{post.star}
-      <br />
-      <Button onClick={() => {
-        navigate('/post/translate/' + id)
-      }}>翻译帖子</Button>
-      <Button onClick={() => {
-        navigate('/post/translateai/' + id)
-      }}>AI翻译帖子</Button>
 			<br />
 			用户点赞信息：{likeStatus == 'UNLIKE'?'无操作':(likeStatus == 'LIKE'?'已点赞':(likeStatus == 'DISLIKE'?'已点踩':'无法获取点赞信息'))}
-      {LikeButton(likeStatus)}
 
       <h1 style={{fontSize: 99}}>评论</h1>
       {comments.map(comment => <>
@@ -160,9 +108,9 @@ export default function PostView() {
           <span
             onClick={() => {
               axios.post(backend + 'lang/translate', {
-                lang: post.language,
-                word: a.first
-              }, {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
+								lang: post.language,
+								word: a.first
+							}, {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
                 .then(res => {
                   MessagePlugin.info('词汇“' + a.first + '”的翻译结果：' + res.data);
                 })
