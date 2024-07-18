@@ -108,7 +108,7 @@ const ContentView = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         }
       )
-      alert(`词汇"${word}"的翻译结果：${res.data}`)
+      MessagePlugin.success(`词汇"${word}"的翻译结果：${res.data}`)
     } catch (err) {
       await MessagePlugin.error('翻译失败')
     }
@@ -124,7 +124,7 @@ const ContentView = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         }
       )
-      alert('发送成功')
+      MessagePlugin.success('发送成功')
       setNewComment('')
       fetchComments()
     } catch (err) {

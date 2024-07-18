@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { useAtom } from 'jotai'
 import { showContentAtom } from '@/store/ContentManager'
 import axios from 'axios'
-import { Button, MessagePlugin } from 'tdesign-react'
+import { Button, Form, Input, MessagePlugin } from 'tdesign-react'
 import { backend } from '@/global'
+import FormItem from 'tdesign-react/es/form/FormItem.js'
 
 const HomeView = () => {
   const navigate = useNavigate()
@@ -42,7 +43,48 @@ const HomeView = () => {
   return (
     <div className="dark:bg-black dark:bg-dot-white/[0.2] flex h-screen w-full items-start justify-center overflow-x-scroll bg-white bg-dot-black/[0.4]">
       <div className="dark:bg-black pointer-events-none absolute inset-0 z-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
-
+      <div>
+        {' '}
+        <div className="w-40">
+          <Form
+            onSubmit={(e) => {
+              axios
+                .post(
+                  backend + 'post/new',
+                  {
+                    title: e.fields.title,
+                    content: e.fields.content,
+                    anonymous: false,
+                    block: 1,
+                    top: false
+                  },
+                  {
+                    headers: {
+                      Authorization: 'Bearer ' + localStorage.getItem('token')
+                    }
+                  }
+                )
+                .then((res) => {
+                  MessagePlugin.success('发送成功')
+                  navigate('/post/' + res.data.post)
+                })
+                .catch((err) => {
+                  MessagePlugin.error('发送失败')
+                })
+            }}
+          >
+            <FormItem name="title">
+              <Input placeholder="标题" />
+            </FormItem>
+            <FormItem name="content">
+              <Input placeholder="内容" />
+            </FormItem>
+            <FormItem>
+              <Button type="submit">发帖</Button>
+            </FormItem>
+          </Form>
+        </div>
+      </div>
       <div
         className="z-10 p-4"
         style={{
@@ -51,9 +93,6 @@ const HomeView = () => {
           width: '70%'
         }}
       >
-        <a href="/post/new" className="fixed bottom-4 right-4">
-          <Button>发帖</Button>
-        </a>
         {recommend.list.map((i, index) => (
           <div
             key={index}
