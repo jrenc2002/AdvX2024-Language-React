@@ -1,11 +1,11 @@
-import axios from 'axios'
-import React, { useState, ChangeEvent, FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
 import {
-  EnvelopeIcon,
   ArrowLeftIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
+  EnvelopeIcon
 } from '@heroicons/react/20/solid'
+import axios from 'axios'
+import { ChangeEvent, FormEvent, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { backend } from '../global'
 
 export default function RegisterView() {
@@ -83,7 +83,7 @@ export default function RegisterView() {
             onClick={() => navigate('/login')}
           >
             <ArrowLeftIcon className="mr-1 h-5 w-5" />
-            返回登陆
+            返回登录
           </button>
         </div>
 
