@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessagePlugin } from 'tdesign-react';
+import { Button, MessagePlugin } from 'tdesign-react';
 
 const HomeView = () => {
   const navigate = useNavigate();
@@ -53,6 +53,7 @@ const HomeView = () => {
           ))}
         </div> */}
         <div className="w-80 rounded-lg border border-gray-300 bg-white p-6 shadow-md dark:bg-gray-800">
+          <a href='/post/new'><Button>发帖</Button></a>
           <h3 className="mb-2 pl-2 text-xl font-bold">帖子热榜</h3>
           {recommend.list.map(i => <a href={'/post/' + i.id}>
             标题：{i.title}

@@ -1,7 +1,7 @@
 import { backend, language } from '@/global'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { MessagePlugin } from 'tdesign-react'
 
 export default function PostView() {
@@ -13,6 +13,7 @@ export default function PostView() {
   const [author, setAuthor] = useState({ username: null })
   const [loaded, setLoaded] = useState(false)
   const token = localStorage.getItem('token')
+  const navigate = useNavigate();
   useEffect(() => {
     if (!loaded)
       axios
@@ -28,7 +29,10 @@ export default function PostView() {
             setAuthor(res.data)
           })
         })
-        .catch(console.log)
+        .catch(err => {
+          MessagePlugin.error('获取帖子失败');
+          navigate('/');
+        })
   })
   return (
     <>
