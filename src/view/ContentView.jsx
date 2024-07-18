@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAtom } from 'jotai'
 import { showContentAtom } from '@/store/ContentManager'
@@ -20,6 +20,9 @@ const ContentView = () => {
   const [likeStatus, setLikeStatus] = useState('')
   const [newComment, setNewComment] = useState('')
   const [newBComment, setNewBComment] = useState('')
+  const [isInputFocused, setIsInputFocused] = useState(false)
+  const [currentCommentIndex, setCurrentCommentIndex] = useState(0)
+  const inputRef = useRef(null)
   const placeholders = [
     '说些你想说的🫵！',
     '良言三冬暖，恶语四月寒🤙',
@@ -43,7 +46,17 @@ const ContentView = () => {
     fetchComments()
     fetchLikeStatus()
   }, [id, contentData, navigate])
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isInputFocused && comments.length > 0) {
+        const newIndex = (currentCommentIndex + 1) % comments.length
+        setCurrentCommentIndex(newIndex)
+      }
+    }
 
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [isInputFocused, comments, currentCommentIndex])
   const fetchPostData = async () => {
     try {
       console.log('Fetching post data for id:', id)
@@ -153,8 +166,7 @@ const ContentView = () => {
                 a.first
               )
             )}
-            _______
-            {JSON.stringify(contentData)}
+            {JSON.stringify(comments)}
             <div className="absolute bottom-3 flex text-sm font-light text-gray-600 ">
               {new Date(post.create).toLocaleString()}
             </div>
