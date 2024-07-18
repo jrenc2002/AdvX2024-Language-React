@@ -56,7 +56,13 @@ export default function PostView() {
         a.second ? (
           <span
             onClick={() => {
-              MessagePlugin.info('待完成查词接口：查询词汇“' + a.first + '”')
+              axios.get(backend + 'lang/translate/'+ post.language +'/' + a.first, {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
+                .then(res => {
+                  MessagePlugin.info('词汇“' + a.first + '”的翻译结果：' + res.data);
+                })
+                .catch(err => {
+                  MessagePlugin.error('翻译失败');
+                });
             }}
           >
             {a.first}
@@ -86,18 +92,24 @@ export default function PostView() {
       {comments.map(comment => <>
         <img src={backend + '/user/avatar/' + comment.author} style={{width: 100}} />
         {comment.content.map((a) =>
-          a.second ? (
-            <span
-              onClick={() => {
-                MessagePlugin.info('待完成查词接口：查询词汇“' + a.first + '”')
-              }}
-            >
-              {a.first}
-            </span>
-          ) : (
-            a.first
-          )
-        )}
+        a.second ? (
+          <span
+            onClick={() => {
+              axios.get(backend + 'lang/translate/'+ post.language +'/' + a.first, {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
+                .then(res => {
+                  MessagePlugin.info('词汇“' + a.first + '”的翻译结果：' + res.data);
+                })
+                .catch(err => {
+                  MessagePlugin.error('翻译失败');
+                });
+            }}
+          >
+            {a.first}
+          </span>
+        ) : (
+          a.first
+        )
+      )}
         <br />
         评论时间：{new Date(comment.create).toLocaleString()}
       </>)}
