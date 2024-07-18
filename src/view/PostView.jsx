@@ -2,7 +2,8 @@ import { backend, language } from '@/global'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { MessagePlugin } from 'tdesign-react'
+import { Button, Form, Input, MessagePlugin } from 'tdesign-react'
+import FormItem from 'tdesign-react/es/form/FormItem'
 
 export default function PostView() {
   let { id } = useParams()
@@ -10,9 +11,11 @@ export default function PostView() {
     title: null,
     content: [{ first: '', second: true }]
   })
+  const [comments, setComments] = useState([]);
   const [author, setAuthor] = useState({ username: null })
   const [loaded, setLoaded] = useState(false)
   const token = localStorage.getItem('token')
+  const [commentsLoaded, setCommentsLoaded] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     if (!loaded)
@@ -33,12 +36,19 @@ export default function PostView() {
           MessagePlugin.error('获取帖子失败');
           navigate('/');
         })
+    if(loaded && !commentsLoaded){
+      setCommentsLoaded(true);
+      axios.get(backend + 'comment/post/' + id, {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
+        .then(res => {
+          setComments(res.data);
+        })
+        .catch(err => {
+          MessagePlugin.error('获取评论失败');
+        });
+    }
   })
   return (
     <>
-      {/* {JSON.stringify(post)} */}
-      ----------------------------------
-      <br />
       标题：{post.title}
       <br />
       内容：
@@ -71,6 +81,44 @@ export default function PostView() {
       点踩数：{post.dislike}
       <br />
       收藏数：{post.star}
+
+      <h1 style={{fontSize: 99}}>评论</h1>
+      {comments.map(comment => <>
+        <img src={backend + '/user/avatar/' + comment.author} style={{width: 100}} />
+        {comment.content.map((a) =>
+          a.second ? (
+            <span
+              onClick={() => {
+                MessagePlugin.info('待完成查词接口：查询词汇“' + a.first + '”')
+              }}
+            >
+              {a.first}
+            </span>
+          ) : (
+            a.first
+          )
+        )}
+        <br />
+        评论时间：{new Date(comment.create).toLocaleString()}
+      </>)}
+
+      <Form onSubmit={e => {
+        axios.post(backend + 'comment/post/' + id, e.fields, {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
+          .then(res => {
+            MessagePlugin.success('发送成功');
+            location.reload();
+          })
+          .catch(err => {
+            MessagePlugin.error('发送失败');
+          });
+      }}>
+        <FormItem name='content'>
+          <Input placeholder='评论内容'/>
+        </FormItem>
+        <FormItem>
+          <Button type='submit'>发送评论</Button>
+        </FormItem>
+      </Form>
       <img src={backend + 'user/avatar/' + post.author} />
     </>
   )
