@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Form, Input, MessagePlugin } from 'tdesign-react'
 import FormItem from 'tdesign-react/es/form/FormItem'
 
-export default function PostView() {
+export default function PostTranslateView() {
   let { id } = useParams()
   const [post, setPost] = useState({
     title: null,
@@ -16,6 +16,7 @@ export default function PostView() {
   const [loaded, setLoaded] = useState(false)
   const token = localStorage.getItem('token')
   const [commentsLoaded, setCommentsLoaded] = useState(false);
+	const [translation, setTranslation] = useState('');
   const navigate = useNavigate();
   useEffect(() => {
     if (!loaded)
@@ -26,7 +27,20 @@ export default function PostView() {
           }
         })
         .then((res) => {
-          setLoaded(true)
+					axios.post(backend + 'lang/translate1', {
+						lang: res.data.language,
+						word: res.data.content.map(e => e.first).join('')
+					},{
+						headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}
+					})
+						.then(res => {
+							setTranslation(res.data);
+							setLoaded(true);
+						})
+						.catch(err => {
+							MessagePlugin.error('翻译全文失败');
+							navigate('/');
+						});
           setPost(res.data)
           axios.get(backend + 'user/info/' + res.data.author).then((res) => {
             setAuthor(res.data)
@@ -51,29 +65,8 @@ export default function PostView() {
     <>
       标题：{post.title}
       <br />
-      内容：
-      {post.content.map((a) =>
-        a.second ? (
-          <span
-            onClick={() => {
-              axios.post(backend + 'lang/translate', {
-								lang: post.language,
-								word: a.first
-							}, {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
-                .then(res => {
-                  MessagePlugin.info('词汇“' + a.first + '”的翻译结果：' + res.data);
-                })
-                .catch(err => {
-                  MessagePlugin.error('翻译失败');
-                });
-            }}
-          >
-            {a.first}
-          </span>
-        ) : (
-          a.first
-        )
-      )}
+      翻译结果：
+      {translation}
       <br />
       作者：{author.username}
       <br />
@@ -99,9 +92,9 @@ export default function PostView() {
           <span
             onClick={() => {
               axios.post(backend + 'lang/translate', {
-                lang: post.language,
-                word: a.first
-              }, {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
+								lang: post.language,
+								word: a.first
+							}, {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
                 .then(res => {
                   MessagePlugin.info('词汇“' + a.first + '”的翻译结果：' + res.data);
                 })
