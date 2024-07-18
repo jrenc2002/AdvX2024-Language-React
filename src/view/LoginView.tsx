@@ -33,8 +33,10 @@ export default function LoginView() {
   }
 
   useEffect(() => {
-    if (token) navigate('/home')
-  })
+    if (token) {
+      navigate('/home')
+    }
+  }, [token, navigate])
 
   return (
     <>
