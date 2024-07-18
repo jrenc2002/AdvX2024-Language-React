@@ -11,6 +11,7 @@ interface BlurIntProps {
   }
   duration?: number
   mode?: boolean
+  isVisible?: boolean // 添加 isVisible 属性
 }
 
 const BlurIn = ({
@@ -18,9 +19,9 @@ const BlurIn = ({
   className,
   variant,
   duration = 0.5,
-  mode = true
+  mode = true,
+  isVisible = true // 添加默认值
 }: BlurIntProps) => {
-  const [isVisible, setIsVisible] = useState(true)
   const timeoutId = useRef<NodeJS.Timeout | null>(null)
 
   const defaultVariants = {
@@ -34,12 +35,11 @@ const BlurIn = ({
     if (timeoutId.current) {
       clearTimeout(timeoutId.current)
     }
-    setIsVisible(true)
   }
 
   const handleMouseLeave = () => {
     timeoutId.current = setTimeout(() => {
-      setIsVisible(false)
+      // Do nothing
     }, 3000)
   }
 
@@ -51,7 +51,7 @@ const BlurIn = ({
     }
   }, [])
 
-  return mode === true ? (
+  return (
     <motion.div
       initial="hidden"
       animate={isVisible ? 'visible' : 'hidden'}
@@ -60,16 +60,6 @@ const BlurIn = ({
       className={cn(className, '')}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-    >
-      {children}
-    </motion.div>
-  ) : (
-    <motion.div
-      initial="hidden"
-      animate={isVisible ? 'visible' : 'hidden'}
-      transition={{ duration }}
-      variants={combinedVariants}
-      className={cn(className, '')}
     >
       {children}
     </motion.div>

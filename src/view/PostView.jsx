@@ -1,8 +1,10 @@
-import { backend, language } from "@/global";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { MessagePlugin } from "tdesign-react";
+import { backend, language } from '@/global'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { MessagePlugin } from 'tdesign-react'
+
+
 
 export default function PostView(){
 	let {id} = useParams();
@@ -57,4 +59,5 @@ export default function PostView(){
 		收藏数：{post.star}
 		<img src={backend + 'user/avatar/' + post.author} />
 	</>;
+
 }
