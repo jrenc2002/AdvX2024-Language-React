@@ -14,7 +14,7 @@ const HomeView = () => {
   const [recommend, setRecommend] = useState({ list: [] })
 
   useEffect(() => {
-    if (!loaded)
+    if (!loaded) {
       axios
         .get(backend + 'home/recommend', {
           headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
@@ -25,9 +25,10 @@ const HomeView = () => {
         })
         .catch((err) => {
           MessagePlugin.error('加载首页推荐失败')
-          console.log(err)
+          console.error(err)
         })
-  })
+    }
+  }, [loaded])
 
   const handleTitleClick = (content) => {
     setContentData(content)
@@ -37,36 +38,30 @@ const HomeView = () => {
   return (
     <div className="dark:bg-black dark:bg-dot-white/[0.2] flex h-screen w-full items-start justify-center overflow-x-scroll bg-white bg-dot-black/[0.4]">
       <div className="dark:bg-black pointer-events-none absolute inset-0 z-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
-      <div className="z-10 grid grid-cols-1 gap-4 p-4 sm:grid-cols-2">
-        {/* <div className="w-80 rounded-lg border border-gray-300 bg-white p-6 shadow-md dark:bg-gray-800">
-          <h3 className="mb-2 pl-2 text-xl font-bold">问题热榜</h3>
-          {questionHotList.map((questionData, index) => (
-            <p
-              key={index}
-              className={`rounded p-2 hover:cursor-pointer hover:bg-gray-100 ${
-                index !== questionHotList.length - 1 ? 'border-b' : ''
-              }`}
-              onClick={() => handleTitleClick(questionData)}
-            >
-              {questionData.question}
-            </p>
-          ))}
-        </div> */}
-        <div className="dark:bg-gray-800 w-80 rounded-lg border border-gray-300 bg-white p-6 shadow-md">
-          <a href="/post/new">
-            <Button>发帖</Button>
+      <div
+        className="z-10 p-4"
+        style={{
+          columnCount: 2,
+          columnGap: '1rem',
+          width: '70%'
+        }}
+      >
+        {recommend.list.map((i, index) => (
+          <a
+            key={index}
+            href={'/post/' + i.id}
+            className="mb-4 block break-inside-avoid"
+          >
+            <div className="dark:bg-gray-800 w-full rounded-lg border border-gray-300 bg-white p-6 shadow-md">
+              <div className="mb-2 text-xl font-bold">{i.title}</div>
+              <div className="text-md font-light">{i.content}</div>
+            </div>
           </a>
-          <h3 className="mb-2 pl-2 text-xl font-bold">帖子热榜</h3>
-          {recommend.list.map((i) => (
-            <a href={'/post/' + i.id}>
-              标题：{i.title}
-              <br />
-              内容：{i.content}
-              <br />
-            </a>
-          ))}
-        </div>
+        ))}
       </div>
+      <a href="/post/new" className="fixed bottom-4 right-4">
+        <Button>发帖</Button>
+      </a>
     </div>
   )
 }
