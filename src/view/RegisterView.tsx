@@ -15,8 +15,7 @@ export default function RegisterView() {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
-    password: '',
-    code: ''
+    password: ''
   })
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
@@ -32,6 +31,7 @@ export default function RegisterView() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    formData.email = mail
     axios
       .post(backend + 'auth/register', formData)
       .then((res) => {

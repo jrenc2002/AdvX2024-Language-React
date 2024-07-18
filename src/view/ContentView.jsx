@@ -8,12 +8,14 @@ import DifyStreamingComponent from '@/api/Dify'
 import axios from 'axios'
 import { backend, language } from '@/global'
 import { MessagePlugin } from 'tdesign-react'
+import { languageAtom } from '@/store/AppSet'
 
 const ContentView = () => {
   const pathname = window.location.pathname
   const id = pathname.split('/').pop()
   const [contentData] = useAtom(showContentAtom)
   const navigate = useNavigate()
+  const [localLanguage, setLocalLanguage] = useAtom(languageAtom)
   const [post, setPost] = useState({ title: '', content: [], language: '' })
   const [comments, setComments] = useState([])
   const [author, setAuthor] = useState({ username: '' })
@@ -22,7 +24,24 @@ const ContentView = () => {
   const [newBComment, setNewBComment] = useState('')
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [currentCommentIndex, setCurrentCommentIndex] = useState(0)
-  const inputRef = useRef(null)
+  const [mergedData, setMergedData] = useState([])
+  const [currentPageIndex, setCurrentPageIndex] = useState(0)
+  const [unfamiliarWord, setUnfamiliarWord] = useState('')
+  useEffect(() => {
+    const handleScroll = (event) => {
+      if (event.deltaY > 0) {
+        setCurrentPageIndex((prevIndex) => prevIndex + 1)
+      } else {
+        setCurrentPageIndex((prevIndex) => Math.max(prevIndex - 1, 0))
+      }
+    }
+
+    window.addEventListener('wheel', handleScroll)
+
+    return () => {
+      window.removeEventListener('wheel', handleScroll)
+    }
+  }, [setCurrentPageIndex])
   const placeholders = [
     '说些你想说的🫵！',
     '良言三冬暖，恶语四月寒🤙',
@@ -46,6 +65,21 @@ const ContentView = () => {
     fetchComments()
     fetchLikeStatus()
   }, [id, contentData, navigate])
+  // 添加这个新的 useEffect 来在 post 和 comments 都加载完成后合并数据
+  useEffect(() => {
+    mergePostAndComments()
+  }, [post, comments])
+  const mergePostAndComments = () => {
+    if (post.content && comments.length > 0) {
+      const merged = [
+        [post.content],
+        ...comments.map((comment) => [comment.content])
+      ]
+      setMergedData(merged, post, comments)
+      console.log('Merged Data:', merged)
+    }
+  }
+
   useEffect(() => {
     const handleScroll = () => {
       if (isInputFocused && comments.length > 0) {
@@ -116,12 +150,13 @@ const ContentView = () => {
     try {
       const res = await axios.post(
         `${backend}lang/translate`,
-        { lang: post.language, word },
+        { lang: localLanguage, word },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         }
       )
-      MessagePlugin.success(`词汇"${word}"的翻译结果：${res.data}`)
+      console.log(res, post, localLanguage)
+      setUnfamiliarWord(res.data)
     } catch (err) {
       await MessagePlugin.error('翻译失败')
     }
@@ -149,24 +184,33 @@ const ContentView = () => {
     <BlurIn mode={false}>
       <div className="dark:bg-black dark:bg-dot-white/[0.2] flex h-screen w-full items-start justify-center bg-white bg-dot-black/[0.4]">
         <div className="z-10 flex w-1/2 flex-col gap-4 p-2">
-          <div className="dark:bg-gray-800 mt-10 h-[15vh] w-full rounded-lg border border-gray-300 bg-white p-6 shadow-md">
+          <div className="dark:bg-gray-800 mt-10 h-[15vh] w-full overflow-x-auto rounded-lg border border-gray-300 bg-white p-3 shadow-md">
             <h3 className="pl-2 text-xl font-bold leading-8">{post.title}</h3>
           </div>
+
           <div className="dark:bg-gray-800 relative h-[50vh] w-full overflow-auto rounded-lg border border-gray-300 bg-white p-6 shadow-md">
-            {post.content.map((a, index) =>
-              a.second ? (
-                <span
-                  key={index}
-                  onClick={() => handleTranslate(a.first)}
-                  style={{ cursor: 'pointer', textDecoration: 'underline' }}
-                >
-                  {a.first}
-                </span>
-              ) : (
-                a.first
-              )
-            )}
-            {JSON.stringify(comments)}
+            {mergedData[currentPageIndex] &&
+              mergedData[currentPageIndex].map((item, i) => (
+                <div key={i}>
+                  {item.map((a, index) => {
+                    return a.second ? (
+                      <span
+                        className=" rounded p-1 text-[1rem] hover:bg-gray-100"
+                        key={index}
+                        onClick={() => handleTranslate(a.first)}
+                        style={{
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {a.first}
+                      </span>
+                    ) : (
+                      a.first
+                    )
+                  })}
+                </div>
+              ))}
+
             <div className="absolute bottom-3 flex text-sm font-light text-gray-600 ">
               {new Date(post.create).toLocaleString()}
             </div>
@@ -217,12 +261,19 @@ const ContentView = () => {
           </div>
         </div>
         <div className="flex w-1/2 flex-col gap-4 p-2">
-          <div className="dark:bg-gray-800 relative mt-10 h-[calc(65vh-1.6rem)] w-full rounded-lg border border-gray-300 bg-white p-6 shadow-md">
+          <div className="dark:bg-gray-800 relative mt-10 h-[calc(55vh-1.6rem)] w-full rounded-lg border border-gray-300 bg-white p-6 shadow-md">
             <div className="h-full w-full overflow-auto overflow-x-hidden">
-              <div></div>
               <div className="absolute bottom-4 right-6 font-light text-gray-500">
                 ✨现在是AI指导的内容
               </div>
+            </div>
+          </div>
+
+          <div className="flex h-[8] w-full gap-3">
+            <div className="relative flex h-full w-full items-center justify-center rounded-md border bg-gray-50 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-800 shadow-md hover:bg-white">
+              {unfamiliarWord === null
+                ? '点击单词可以获取释义哦！'
+                : unfamiliarWord}
             </div>
           </div>
           <div className="flex h-[10vh] w-full flex-col gap-3">
@@ -244,9 +295,7 @@ const ContentView = () => {
                       }
                     )
                     .then((res) => {
-                      MessagePlugin.info(
-                        '词汇“' + a.first + '”的翻译结果：' + res.data
-                      )
+                      MessagePlugin.info('调用成功')
                     })
                     .catch((err) => {
                       MessagePlugin.error('翻译失败')
