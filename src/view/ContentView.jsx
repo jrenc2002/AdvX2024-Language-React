@@ -153,6 +153,8 @@ const ContentView = () => {
                 a.first
               )
             )}
+            _______
+            {JSON.stringify(contentData)}
             <div className="absolute bottom-3 flex text-sm font-light text-gray-600 ">
               {new Date(post.create).toLocaleString()}
             </div>
