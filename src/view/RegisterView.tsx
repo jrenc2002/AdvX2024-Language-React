@@ -6,8 +6,9 @@ import {
 import axios from 'axios'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { backend } from '../global'
+import { backend, language } from '../global'
 
+import { MessagePlugin } from 'tdesign-react'
 export default function RegisterView() {
   const [step, setStep] = useState<number>(1)
   const list: Array<{ close: () => void }> = []
@@ -35,12 +36,12 @@ export default function RegisterView() {
     axios
       .post(backend + 'auth/register', formData)
       .then((res) => {
-        setMessage('注册成功')
+        MessagePlugin.success('注册成功')
         localStorage.setItem('token', res.data.token)
         navigate('/')
       })
       .catch((err) => {
-        setMessage('注册失败')
+        MessagePlugin.error('密码小于八位')
       })
       .finally(() => {
         setLoading(false)
@@ -92,7 +93,7 @@ export default function RegisterView() {
             <h2 className="block text-sm font-medium leading-6 text-gray-900">
               <span className="text-xl font-bold text-indigo-600">01</span>{' '}
               <span className="text-xl font-light text-indigo-600">
-                发送验证邮件
+                填写邮件
               </span>
             </h2>
             <div>
@@ -119,29 +120,6 @@ export default function RegisterView() {
                   onChange={(e) => setMail(e.target.value)}
                 />
               </div>
-            </div>
-            <button
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={handleSendEmail}
-              disabled={loading}
-            >
-              {loading ? '发送中...' : '发送验证邮箱'}
-            </button>
-            <div className="ring-1 ring-gray-500 focus-within:ring-2 focus-within:ring-indigo-600 rounded-md border border-gray-300 px-3 pb-1.5 pt-2.5 shadow-sm ring-inset">
-              <label
-                htmlFor="code"
-                className="block text-xs font-medium text-gray-900"
-              >
-                验证码
-              </label>
-              <input
-                type="text"
-                name="code"
-                id="code"
-                className="  block w-full   border-0 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6"
-                placeholder="请输入验证码"
-                onChange={handleInputChange}
-              />
             </div>
           </div>
         )}
