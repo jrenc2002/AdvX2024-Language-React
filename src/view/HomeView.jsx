@@ -10,21 +10,24 @@ import { MessagePlugin } from 'tdesign-react'
 const HomeView = () => {
   const navigate = useNavigate()
   const [_, setContentData] = useAtom(showContentAtom)
-  const [loaded,setLoaded]= useState(false);
-  const [recommend,setRecommend] = useState({list: []});
+  const [loaded, setLoaded] = useState(false)
+  const [recommend, setRecommend] = useState({ list: [] })
 
   useEffect(() => {
-    if(!loaded)
-      axios.get(backend + 'home/recommend', {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}})
-        .then(res => {
-          setRecommend(res.data);
-          setLoaded(true);
+    if (!loaded)
+      axios
+        .get(backend + 'home/recommend', {
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
         })
-        .catch(err => {
-          MessagePlugin.error('加载首页推荐失败');
-          console.log(err);
-        });
-  });
+        .then((res) => {
+          setRecommend(res.data)
+          setLoaded(true)
+        })
+        .catch((err) => {
+          MessagePlugin.error('加载首页推荐失败')
+          console.log(err)
+        })
+  })
 
   const handleTitleClick = (content) => {
     setContentData(content)
@@ -51,16 +54,18 @@ const HomeView = () => {
         </div> */}
         <div className="w-80 rounded-lg border border-gray-300 bg-white p-6 shadow-md dark:bg-gray-800">
           <h3 className="mb-2 pl-2 text-xl font-bold">帖子热榜</h3>
-          {recommend.list.map(i => <a href={'/post/' + i.id}>
-            标题：{i.title}
-            <em />
-            内容：{i.content}
-            <em />
-          </a>)}
+          {recommend.list.map((i) => (
+            <a href={'/post/' + i.id}>
+              标题：{i.title}
+              <em />
+              内容：{i.content}
+              <em />
+            </a>
+          ))}
         </div>
       </div>
     </div>
   )
 }
 
-export default HomeView;
+export default HomeView

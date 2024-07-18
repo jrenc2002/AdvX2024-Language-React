@@ -6,43 +6,42 @@ import { backend } from '../global'
 
 export default function LoginView() {
   const navigate = useNavigate()
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token')
 
   const onSubmit = (form: any) => {
     const isEmail = /^\w+(-+\.\w+)*@\w+(-.\w+)*\.\w+(-\.\w+)*$/.test(
       form.fields.account
-    );
+    )
     const loginData = isEmail
       ? { email: form.fields.account, password: form.fields.password }
-      : { id: form.fields.account, password: form.fields.password };
+      : { id: form.fields.account, password: form.fields.password }
 
     axios
       .post(backend + 'auth/login', loginData)
       .then((res) => {
-        MessagePlugin.success('登录成功');
-        localStorage.setItem('token', res.data.token);
-        navigate('/home');
+        MessagePlugin.success('登录成功')
+        localStorage.setItem('token', res.data.token)
+        navigate('/home')
       })
       .catch((err) => {
-        MessagePlugin.error('登录失败');
-      });
+        MessagePlugin.error('登录失败')
+      })
   }
 
   const navigateToRegister = () => {
-    navigate('/register');
-  };
+    navigate('/register')
+  }
 
   useEffect(() => {
-    if(token)
-      navigate('/home');
-  });
+    if (token) navigate('/home')
+  })
 
   return (
     <>
       <div className="flex h-[calc(100%)] flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Sign in to your account
+            哈喽，好久不见🫰
           </h2>
         </div>
 
