@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { useAtom } from 'jotai'
-import { showContentAtom } from '@/store/ContentManager'
 import BlurIn from '@/components/magicui/Blur'
 import { PlaceholdersAndVanishInput } from '@/components/magicui/placeholders-and-vanish-input'
-import DifyStreamingComponent from '@/api/Dify'
-import axios from 'axios'
 import { backend, language } from '@/global'
+import { showContentAtom } from '@/store/ContentManager'
+import axios from 'axios'
+import { useAtom } from 'jotai'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { MessagePlugin } from 'tdesign-react'
 
 const ContentView = () => {
@@ -166,7 +165,6 @@ const ContentView = () => {
                 a.first
               )
             )}
-            {JSON.stringify(comments)}
             <div className="absolute bottom-3 flex text-sm font-light text-gray-600 ">
               {new Date(post.create).toLocaleString()}
             </div>
