@@ -14,7 +14,7 @@ import {
 } from 'react-router-dom'
 import 'tdesign-react/es/style/index.css'
 
-import '@/i18n'; // 引入 i18n 配置文件
+import '@/i18n' // 引入 i18n 配置文件
 import GuideView from './view/GuideView'
 import PostView from './view/PostView.jsx'
 import SendPostView from './view/SendPostView.jsx'
@@ -41,7 +41,7 @@ const MainContent = () => {
     <main className="h-screen w-full grow">
       <div className="fixed inset-0 flex justify-center sm:px-8">
         <div className="flex w-full max-w-7xl lg:px-8">
-          <div className="ring-1 ring-zinc-100 dark:ring-zinc-400/20 w-full bg-zinc-50/90 dark:bg-zinc-900/80">
+          <div className="ring-1 ring-zinc-100 dark:ring-zinc-400/20 dark:bg-zinc-900/80 w-full bg-zinc-50/90">
             <Routes>
               <Route path="/" element={<Navigate to="/login" replace />} />
               <Route path="/home" element={<HomeView />} />

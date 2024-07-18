@@ -76,7 +76,7 @@ export default function RegisterView() {
 
   return (
     <div className="flex h-[calc(100%)] flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="w-full space-y-8 bg-white p-8 dark:bg-gray-800">
+      <div className="dark:bg-gray-800 w-full space-y-8 bg-white p-8">
         <div className="text-gray-900">
           <button
             className="flex items-center justify-center rounded-md border bg-gray-50 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-800 shadow-sm hover:bg-white"
