@@ -30,7 +30,8 @@ export default function PostView() {
           setPost(res.data)
           axios.get(backend + 'user/info/' + res.data.author).then((res) => {
             setAuthor(res.data)
-          })
+          });
+          axios.post(backend + 'post/view', {post: id}, {headers: {Authorization: 'Bearer ' + localStorage.getItem('token')}});
         })
         .catch(err => {
           MessagePlugin.error('获取帖子失败');
