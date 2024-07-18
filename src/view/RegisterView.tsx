@@ -138,7 +138,7 @@ export default function RegisterView() {
                 type="text"
                 name="code"
                 id="code"
-                className="focus:ring-0 block w-full border-0 p-0 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                className="  block w-full   border-0 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                 placeholder="请输入验证码"
                 onChange={handleInputChange}
               />
@@ -155,7 +155,7 @@ export default function RegisterView() {
               </span>
             </h2>
             <div className="isolate -space-y-px rounded-md border shadow-sm">
-              <div className="ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600 relative rounded-md rounded-b-none border px-3 pb-1.5 pt-2.5 ring-inset focus-within:z-10">
+              <div className="ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600 relative rounded-md rounded-b-none border-[0.5px] px-3 pb-1.5 pt-2.5 ring-inset focus-within:z-10">
                 <label
                   htmlFor="username"
                   className="block text-xs font-medium text-gray-900"
@@ -166,7 +166,7 @@ export default function RegisterView() {
                   type="text"
                   name="username"
                   id="username"
-                  className="focus:ring-0 block w-full border-0 p-0 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                  className="m-1 ml-0 block w-full rounded border-0 p-1 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                   placeholder="请输入用户名"
                   value={formData.username}
                   onChange={handleInputChange}
@@ -183,7 +183,7 @@ export default function RegisterView() {
                   type="password"
                   name="password"
                   id="password"
-                  className="focus:ring-0 block w-full border-0 p-0 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                  className="focus:ring-0 m-1 ml-0 block w-full rounded border-0 p-1 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                   placeholder="请输入密码"
                   value={formData.password}
                   onChange={handleInputChange}
