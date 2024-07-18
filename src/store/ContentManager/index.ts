@@ -7,5 +7,6 @@ export const showContentAtom = atomWithStorage('showContent', {
   question: '美国波音的星际客机回不来的原因到底是什么？',
   reply: '这里是关于美国波音的星际客机回不来的原因的详细内容。',
   questionID: 23,
-  replyID: 10
+  replyID: 10,
+  id: undefined
 })

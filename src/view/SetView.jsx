@@ -65,7 +65,9 @@ const SetView = () => {
       )
       .then((res) => {
         MessagePlugin.success(
-          `切换${type === 'firstLanguage' ? '母语' : '学习语言'}为${language[lang]}成功`
+          `切换${type === 'firstLanguage' ? '母语' : '学习语言'}为${
+            language[lang]
+          }成功`
         )
         setLoaded(false)
       })
@@ -93,7 +95,7 @@ const SetView = () => {
           <div className="dark:bg-gray-800  w-80 rounded-lg border border-gray-300 bg-white p-6 shadow-md">
             <h3 className="mb-1 pl-2 text-xl font-bold">{user.username}</h3>
             <div className="mb-1 pl-2 text-xl font-light">
-              <span className="font-bold">英语：</span>
+              <span className="font-bold">母语：</span>
               <span className="border-b-2 border-amber-500  text-xl">
                 {language[user.firstLanguage]}
               </span>

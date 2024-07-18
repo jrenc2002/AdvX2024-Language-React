@@ -16,7 +16,7 @@ export function DockDemo(): React.ReactElement {
 
   const handleNavigation = (path: string) => {
     if (path === '/content') {
-      navigate(`/content/${contentData.questionID}`)
+      navigate(`/content/${contentData.id}`)
     } else {
       navigate(path)
     }
