@@ -1,35 +1,41 @@
 import axios from 'axios'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MessagePlugin } from 'tdesign-react'
 import { backend } from '../global'
-import React from 'react'
 
 export default function LoginView() {
   const navigate = useNavigate()
+  const token = localStorage.getItem('token');
 
   const onSubmit = (form: any) => {
     const isEmail = /^\w+(-+\.\w+)*@\w+(-.\w+)*\.\w+(-\.\w+)*$/.test(
       form.fields.account
-    )
+    );
     const loginData = isEmail
       ? { email: form.fields.account, password: form.fields.password }
-      : { id: form.fields.account, password: form.fields.password }
+      : { id: form.fields.account, password: form.fields.password };
 
     axios
       .post(backend + 'auth/login', loginData)
       .then((res) => {
-        MessagePlugin.success('登录成功')
-        localStorage.setItem('token', res.data.token)
-        navigate('/')
+        MessagePlugin.success('登录成功');
+        localStorage.setItem('token', res.data.token);
+        navigate('/home');
       })
       .catch((err) => {
-        MessagePlugin.error('登录失败')
-      })
+        MessagePlugin.error('登录失败');
+      });
   }
 
   const navigateToRegister = () => {
-    navigate('/register')
-  }
+    navigate('/register');
+  };
+
+  useEffect(() => {
+    if(token)
+      navigate('/home');
+  });
 
   return (
     <>

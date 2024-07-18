@@ -1,7 +1,7 @@
 import { DockDemo } from '@/components/DockDemo'
 import { GridBg } from '@/components/magicui/GirdBg'
 import ContentView from '@/view/ContentView'
-import HomeView from '@/view/HomeView'
+import HomeView from '@/view/HomeView.jsx'
 import SetView from '@/view/SetView'
 import StudyView from '@/view/StudyView'
 import React from 'react'
