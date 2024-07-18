@@ -41,7 +41,7 @@ export default function RegisterView() {
         navigate('/')
       })
       .catch((err) => {
-        MessagePlugin.error('密码小于八位')
+        MessagePlugin.error('注册失败')
       })
       .finally(() => {
         setLoading(false)
