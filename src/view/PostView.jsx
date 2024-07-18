@@ -141,6 +141,10 @@ export default function PostView() {
       点踩数：{post.dislike}
       <br />
       收藏数：{post.star}
+      <br />
+      <Button onClick={() => {
+        navigate('/post/translate/' + id)
+      }}>翻译帖子</Button>
 			<br />
 			用户点赞信息：{likeStatus == 'UNLIKE'?'无操作':(likeStatus == 'LIKE'?'已点赞':(likeStatus == 'DISLIKE'?'已点踩':'无法获取点赞信息'))}
       {LikeButton(likeStatus)}
