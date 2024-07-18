@@ -14,13 +14,12 @@ import {
 } from 'react-router-dom'
 import 'tdesign-react/es/style/index.css'
 
-import '@/i18n'; // 引入 i18n 配置文件
+import '@/i18n' // 引入 i18n 配置文件
 import GuideView from './view/GuideView'
 import LangListView from './view/LangListView'
 import PostTranslateView from './view/PostTranslateView'
 import PostView from './view/PostView.jsx'
 import SendPostView from './view/SendPostView.jsx'
-import Settings from './view/Settings.jsx'
 
 const App = (): React.ReactElement => {
   return (
@@ -56,9 +55,11 @@ const MainContent = () => {
               <Route path="/post/:id" element={<PostView />} />
               <Route path="/land" element={<GuideView />} />
               <Route path="/post/new" element={<SendPostView />} />
-              <Route path="/settings" element={<Settings />} />
               <Route path="/list" element={<LangListView />} />
-              <Route path="/post/translate/:id" element={<PostTranslateView />} />
+              <Route
+                path="/post/translate/:id"
+                element={<PostTranslateView />}
+              />
             </Routes>
           </div>
         </div>
