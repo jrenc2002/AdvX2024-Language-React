@@ -27,6 +27,7 @@ const ContentView = () => {
   const [mergedData, setMergedData] = useState([])
   const [currentPageIndex, setCurrentPageIndex] = useState(0)
   const [unfamiliarWord, setUnfamiliarWord] = useState('')
+  const [aiReturn, setAiReturn] = useState('')
   useEffect(() => {
     const handleScroll = (event) => {
       if (event.deltaY > 0) {
@@ -263,6 +264,7 @@ const ContentView = () => {
         <div className="flex w-1/2 flex-col gap-4 p-2">
           <div className="dark:bg-gray-800 relative mt-10 h-[calc(55vh-1.6rem)] w-full rounded-lg border border-gray-300 bg-white p-6 shadow-md">
             <div className="h-full w-full overflow-auto overflow-x-hidden">
+              <div>{aiReturn}</div>
               <div className="absolute bottom-4 right-6 font-light text-gray-500">
                 ✨现在是AI指导的内容
               </div>
@@ -271,9 +273,7 @@ const ContentView = () => {
 
           <div className="flex h-[8] w-full gap-3">
             <div className="relative flex h-full w-full items-center justify-center rounded-md border bg-gray-50 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-800 shadow-md hover:bg-white">
-              {unfamiliarWord === null
-                ? '点击单词可以获取释义哦！'
-                : unfamiliarWord}
+              {!unfamiliarWord ? '点击单词可以获取释义哦！' : unfamiliarWord}
             </div>
           </div>
           <div className="flex h-[10vh] w-full flex-col gap-3">
@@ -295,6 +295,7 @@ const ContentView = () => {
                       }
                     )
                     .then((res) => {
+                      setAiReturn(res.data.output)
                       MessagePlugin.info('调用成功')
                     })
                     .catch((err) => {
@@ -323,7 +324,32 @@ const ContentView = () => {
                 </svg>
                 AI指导
               </button>
-              <button className="relative flex h-full w-24 items-center justify-center rounded-md border bg-gray-50 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-800 shadow-md hover:bg-white">
+              <button
+                onClick={() => {
+                  axios
+                    .post(
+                      backend + 'ai/translate/toFirstLang',
+                      {
+                        text: newBComment,
+                        source: localLanguage
+                      },
+                      {
+                        headers: {
+                          Authorization:
+                            'Bearer ' + localStorage.getItem('token')
+                        }
+                      }
+                    )
+                    .then((res) => {
+                      setAiReturn(res.data.translation)
+                      MessagePlugin.info('调用成功')
+                    })
+                    .catch((err) => {
+                      MessagePlugin.error('翻译失败')
+                    })
+                }}
+                className="relative flex h-full w-24 items-center justify-center rounded-md border bg-gray-50 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-800 shadow-md hover:bg-white"
+              >
                 <svg
                   className="mr-1 h-5 w-5"
                   viewBox="0 0 48 48"
